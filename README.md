@@ -24,7 +24,7 @@ This project is built from scratch as a hands-on learning vehicle, with every li
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOURUSERNAME/the-lantern.git
+   git clone https://github.com/JamezM546/the-lantern.git
    ```
 2. Open `index.html` in your browser.
 
