@@ -40,4 +40,4 @@ That's it — no build step required.
 
 ## About
 
-The Lantern grew out of a genuine desire for a simple, pleasant way to keep track of manga — built as much for learning as for use.
+The Lantern grew out of a genuine desire for a simple, pleasant way to keep track of manga which was built as much for learning as for use.
