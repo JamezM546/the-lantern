@@ -33,7 +33,7 @@ That's it — no build step required.
 ## Roadmap
 
 - [x] Render manga cards from data
-- [x] Card styling and layout
+- [ ] Card styling and layout
 - [ ] Live search via the Jikan API
 - [ ] Save titles to a personal list
 - [ ] Reading progress tracking
