@@ -1,24 +1,39 @@
-document.addEventListener("input", function(event) {
 
-    barAnimation(event);
-
-});
-
-const activeSearch = document.querySelector("#search-input")
-
-function barAnimation(event){
+const searchBtn = document.querySelector("#search-btn")
+const searchInput = document.querySelector("#search-input")
 
 
-    activeSearch.classList.add("pressed");
+searchBtn.addEventListener("click", searchAction); 
 
-    setTimeout(function() {
-        activeSearch.classList.remove("pressed");
-    }, 100)
-
-    const text = activeSearch.value;
+ 
+function searchAction(){
+    const manga_container = document.querySelector("#manga-list");
+    const userText = searchInput.value.trim().toLowerCase();
     
 
+    if(userText === ""){
+        return manga_container.innerHTML = "";
 
+    } else {
+
+        const results = manga_data.filter(function(manga){
+            return manga.title.toLowerCase().includes(userText);
+        });
+
+    
+        let html = "";
+
+        for(let i = 0; i < results.length; i++){
+        
+            html += `<div class="manga-card">
+                        <h3>${results[i].title}</h3>
+                        <p>${results[i].genre}</p>
+                    </div>`
+
+        }
+
+        manga_container.innerHTML = html;
+    }
 }
 
 
@@ -52,21 +67,5 @@ const manga_data = [
 
 
 
-const manga_container = document.querySelector("#manga-list");
 
 
-let html = "";
-
-for(let i = 0; i < manga_data.length; i++){
-  
- html += `<div class="manga-card">
-            <h3>${manga_data[i].title}</h3>
-            <p>${manga_data[i].genre}</p>
-        </div>`
-
-   
-   
-   
-}
-
-manga_container.innerHTML = html;

@@ -15,12 +15,29 @@ html{
 
 .hero{
     text-align: center;
+    padding: 16px;
 }
+
+.hero p{
+    padding:16px;
+}
+
+.search-bar{
+    margin-top: 16px;;
+}
+
 
 body{
     background-color: var(--bg);
     color: var(--main-text);
     font-family: 'Nunito', sans-serif;
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main{
+    flex: 1;
 }
 
 .navbar{
@@ -43,23 +60,32 @@ body{
     color: var(--accent);
 }
 
-.pressed {
-    box-shadow: 0 3px 4px 0 #2e1a26;
-    opacity: 0.5;
+
+
+#manga-list{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-
-
-/* Style the manga cards next*/
 .manga-card{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding:16px;
+    margin-top: 48px;
 }
+
+
 
 .manga-card p{
     font-size: 14px;
     color: var(--text-muted);
     
+}
+
+.footer{
+    align-self: flex-end; 
 }
