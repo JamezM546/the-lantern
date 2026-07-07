@@ -89,3 +89,9 @@ body{
 .footer{
     align-self: flex-end; 
 }
+
+.manga-card img{
+    width: 180px;
+    height: auto;
+    border-radius: 8px;
+}
