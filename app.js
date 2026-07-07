@@ -5,6 +5,12 @@ const searchInput = document.querySelector("#search-input")
 
 searchBtn.addEventListener("click", searchAction); 
 
+searchInput.addEventListener("keydown", function(event){
+    if(event.key === "Enter"){
+        searchAction();
+    }
+});
+
  
 async function searchAction(){
     const manga_container = document.querySelector("#manga-list");
