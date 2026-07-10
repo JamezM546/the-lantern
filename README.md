@@ -18,7 +18,7 @@ This project is built from scratch as a hands-on learning vehicle, with every li
 - **HTML** — page structure
 - **CSS** — styling and layout (flexbox, custom properties for theming)
 - **JavaScript** — dynamic rendering and app logic
-- **[Jikan API](https://jikan.moe/)** — manga data source
+- **[AniList API](https://anilist.co/) (GraphQL) — manga data source**
 
 ## Getting Started
 
@@ -34,7 +34,7 @@ That's it — no build step required.
 
 - [x] Render manga cards from data
 - [x] Card styling and layout
-- [x] Live search via the Jikan API
+- [x] Live search via the AniList API
 - [ ] Save titles to a personal list
 - [ ] Reading progress tracking
 
