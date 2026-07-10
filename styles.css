@@ -95,3 +95,10 @@ body{
     height: auto;
     border-radius: 8px;
 }
+
+#status-message{
+    font-size: 3.5rem;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
