@@ -1,4 +1,5 @@
 const searchBtn = document.querySelector("#search-btn");
+const clearBtn = document.querySelector("#clear-btn");
 const searchInput = document.querySelector("#search-input");
 const manga_container = document.querySelector("#manga-list");
 const statusMessage = document.querySelector("#status-message");
@@ -6,12 +7,20 @@ const statusMessage = document.querySelector("#status-message");
 //Run search on button click
 searchBtn.addEventListener("click", searchAction);
 
+clearBtn.addEventListener("click", clearSearch);
+
 //Also run the search when Enter key is pressed in the input
 searchInput.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     searchAction();
   }
 });
+
+function clearSearch(){
+  searchInput.value = "";
+  statusMessage.textContent = "Trending!";
+  loadTrending();
+}
 
 // * TRENDING SECTION
 async function loadTrending() {
