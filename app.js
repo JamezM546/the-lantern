@@ -3,10 +3,12 @@ const clearBtn = document.querySelector("#clear-btn");
 const searchInput = document.querySelector("#search-input");
 const manga_container = document.querySelector("#manga-list");
 const statusMessage = document.querySelector("#status-message");
+const modalBackground = document.querySelector("#modal-background");
+const modalBody = document.querySelector("#modal-body");
+const closeModal = document.querySelector("#close-modal");
 
-//Run search on button click
+//Run search or clear on button click
 searchBtn.addEventListener("click", searchAction);
-
 clearBtn.addEventListener("click", clearSearch);
 
 //Also run the search when Enter key is pressed in the input
@@ -16,7 +18,7 @@ searchInput.addEventListener("keydown", function (event) {
   }
 });
 
-function clearSearch(){
+function clearSearch() {
   searchInput.value = "";
   statusMessage.textContent = "Trending!";
   loadTrending();
@@ -53,7 +55,6 @@ async function loadTrending() {
     const data = await response.json();
     const results = data.data.Page.media;
 
-
     renderManga(results);
   } catch (error) {
     statusMessage.textContent = "Something went wrong. Please try again.";
@@ -64,12 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTrending();
 });
 
-
-
 // * SEARCHING SECTION
 async function searchAction() {
   const userText = searchInput.value.trim();
-  statusMessage.textContent = `Results for "${userText}"`;
 
   //The object 'variables' that GraphQL looks for. search: as the key, and userText as the value.
   const search_variables = { search: userText };
@@ -115,6 +113,9 @@ async function searchAction() {
       //Dig into the response to reach the manga array
       const results = data.data.Page.media;
 
+      //Display Results Message
+      statusMessage.textContent = `Results for "${userText}" (${results.length} found)`;
+
       renderManga(results);
     } catch (error) {
       statusMessage.textContent = "Something went wrong. Please try again.";
@@ -122,6 +123,85 @@ async function searchAction() {
   }
 }
 
+// * CARD DETAILS SECTION
+manga_container.addEventListener("click", function (event) {
+  const card = event.target.closest(".manga-card");
+  if (card) {
+    showDetails(card.dataset.id);
+  }
+});
+
+async function showDetails(id) {
+  const detail_variables = { id: id };
+
+  const details_query = `
+    query ($id: Int){
+        Media(id: $id, type: MANGA){
+            id
+            title { romaji english }
+            description
+            averageScore
+            chapters
+            genres
+            status
+            }
+        }`;
+
+  try {
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: details_query,
+        variables: detail_variables,
+      }),
+    });
+
+    const data = await response.json();
+
+    //Dig deeper into the manga object to get what we want
+    const manga = data.data.Media;
+    const title = manga.title.english || manga.title.romaji;
+
+    //Conversion table to have status messages (easier to understand)
+    const statusText = {
+      RELEASING: "Ongoing",
+      FINISHED: "Completed",
+      NOT_YET_RELEASED: "Not yet released",
+      CANCELLED: "Cancelled",
+      HIATUS: "On hiatus",
+    };
+
+    const niceStatus = statusText[manga.status] || manga.status;
+
+    modalBody.innerHTML = `
+        <h2>${title}</h2>
+        <p><strong>Score:</strong> ${manga.averageScore}</p>
+        <p><strong>Chapters:</strong> ${manga.chapters}</p>
+        <p><strong>Genres:</strong> ${manga.genres.join(", ")}</p>
+        <p><strong>Status:</strong> ${niceStatus}</p>
+        <p>${manga.description}</p>
+        `;
+
+    modalBackground.classList.remove("hidden"); //show the modal
+
+    closeModal.addEventListener("click", function () {
+      modalBackground.classList.add("hidden"); //hide it again
+    });
+  } catch (error) {
+    console.log("Error loading details:", error);
+  }
+}
+
+//User can click on modal background to exit and not just the 'X'
+modalBackground.addEventListener("click", function (event) {
+  if (event.target === modalBackground) {
+    modalBackground.classList.add("hidden");
+  }
+});
 
 // * RENDERING SECTION
 function renderManga(results) {
@@ -129,7 +209,7 @@ function renderManga(results) {
   for (let i = 0; i < results.length; i++) {
     //Prefer the English title, fall back to romaji if there's none
     const title = results[i].title.english || results[i].title.romaji;
-    html += `<div class="manga-card">
+    html += `<div class="manga-card" data-id="${results[i].id}">
                             <h3>${title}</h3>
                             <img src ="${results[i].coverImage.large}" alt="${title}">
                         </div>`;
