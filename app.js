@@ -6,7 +6,10 @@ const statusMessage = document.querySelector("#status-message");
 const modalBackground = document.querySelector("#modal-background");
 const modalBody = document.querySelector("#modal-body");
 const closeModal = document.querySelector("#close-modal");
+const mylistLink = document.querySelector("#mylist-link");
+const homeLink = document.querySelector("#home-link");
 
+// * EVENT LISTENERS
 //Run search or clear on button click
 searchBtn.addEventListener("click", searchAction);
 clearBtn.addEventListener("click", clearSearch);
@@ -18,10 +21,82 @@ searchInput.addEventListener("keydown", function (event) {
   }
 });
 
+//Load Trending as soon as Page Opens
+document.addEventListener("DOMContentLoaded", () => {
+  loadTrending();
+});
+
+closeModal.addEventListener("click", function () {
+  modalBackground.classList.add("hidden"); //hide it again
+});
+
+mylistLink.addEventListener("click", function (event) {
+  event.preventDefault();
+  statusMessage.textContent = "My List";
+  checkMyList();
+  
+});
+
+manga_container.addEventListener("click", function (event) {
+  const card = event.target.closest(".manga-card");
+  if (card) {
+    showDetails(card.dataset.id);
+  }
+});
+
+//User can click on modal background to exit and not just the 'X'
+modalBackground.addEventListener("click", function (event) {
+  if (event.target === modalBackground) {
+    modalBackground.classList.add("hidden");
+  }
+});
+
+homeLink.addEventListener("click", function (event) {
+  event.preventDefault();
+  clearSearch();
+});
+
+// * SAVED MANGA LIST (Save & Remove Functions)
+//Load saved list on startup (or empty array if nothing saved yet)
+let savedManga = JSON.parse(localStorage.getItem("lantern_list")) || [];
+
+function saveToList(manga) {
+  const alreadySaved = savedManga.some(function (item) {
+    return item.id === manga.id;
+  });
+
+  if (alreadySaved) {
+    return;
+  }
+
+  savedManga.push(manga);
+  localStorage.setItem("lantern_list", JSON.stringify(savedManga));
+
+  if (statusMessage.textContent === "My List") {
+    renderManga(savedManga);
+  }
+}
+
+function removeFromList(id) {
+  savedManga = savedManga.filter(function (item) {
+    return item.id !== id;
+  });
+  localStorage.setItem("lantern_list", JSON.stringify(savedManga));
+}
+
 function clearSearch() {
   searchInput.value = "";
   statusMessage.textContent = "Trending!";
   loadTrending();
+}
+
+function checkMyList(){
+  if (savedManga.length === 0) {
+    manga_container.innerHTML =
+      "<p>Your list is empty - save some manga to see them here!</p>";
+    return;
+  }
+  renderManga(savedManga);
 }
 
 // * TRENDING SECTION
@@ -60,10 +135,6 @@ async function loadTrending() {
     statusMessage.textContent = "Something went wrong. Please try again.";
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadTrending();
-});
 
 // * SEARCHING SECTION
 async function searchAction() {
@@ -118,19 +189,13 @@ async function searchAction() {
 
       renderManga(results);
     } catch (error) {
-      statusMessage.textContent = "Something went wrong. Please try again.";
+      statusMessage.textContent =
+        "Something went wrong. Please try again in a moment.";
     }
   }
 }
 
-// * CARD DETAILS SECTION
-manga_container.addEventListener("click", function (event) {
-  const card = event.target.closest(".manga-card");
-  if (card) {
-    showDetails(card.dataset.id);
-  }
-});
-
+// * MANGA CARD DETAILS SECTION
 async function showDetails(id) {
   const detail_variables = { id: id };
 
@@ -139,6 +204,7 @@ async function showDetails(id) {
         Media(id: $id, type: MANGA){
             id
             title { romaji english }
+            coverImage { large }
             description
             averageScore
             chapters
@@ -184,24 +250,44 @@ async function showDetails(id) {
         <p><strong>Genres:</strong> ${manga.genres.join(", ")}</p>
         <p><strong>Status:</strong> ${niceStatus}</p>
         <p>${manga.description}</p>
+        <button id="save-btn">Save to My List</button>
         `;
 
-    modalBackground.classList.remove("hidden"); //show the modal
+    const saveBtn = document.querySelector("#save-btn");
 
-    closeModal.addEventListener("click", function () {
-      modalBackground.classList.add("hidden"); //hide it again
+    //Is this manga already in the list?
+    const isSaved = savedManga.some((item) => item.id === manga.id);
+    if (isSaved) {
+      saveBtn.textContent = "Remove from My List";
+    } else {
+      saveBtn.textContent = "Save to My List";
+    }
+
+    saveBtn.addEventListener("click", function () {
+      const isSaved = savedManga.some((item) => item.id === manga.id);
+      if (isSaved) {
+        removeFromList(manga.id);
+        saveBtn.textContent = "Save to My List";
+
+        if (statusMessage.textContent === "My List") {
+          checkMyList();
+        }
+      } else {
+        const savedItem = {
+          id: manga.id,
+          title: { english: manga.title.english, romaji: manga.title.romaji },
+          coverImage: { large: manga.coverImage.large },
+        };
+        saveToList(savedItem);
+        saveBtn.textContent = "Remove from My List";
+      }
     });
+
+    modalBackground.classList.remove("hidden"); //show the modal
   } catch (error) {
     console.log("Error loading details:", error);
   }
 }
-
-//User can click on modal background to exit and not just the 'X'
-modalBackground.addEventListener("click", function (event) {
-  if (event.target === modalBackground) {
-    modalBackground.classList.add("hidden");
-  }
-});
 
 // * RENDERING SECTION
 function renderManga(results) {
