@@ -8,6 +8,7 @@ const modalBody = document.querySelector("#modal-body");
 const closeModal = document.querySelector("#close-modal");
 const mylistLink = document.querySelector("#mylist-link");
 const homeLink = document.querySelector("#home-link");
+const genreBar = document.querySelector("#genre-bar");
 
 // * EVENT LISTENERS
 //Run search or clear on button click
@@ -54,6 +55,13 @@ modalBackground.addEventListener("click", function (event) {
 homeLink.addEventListener("click", function (event) {
   event.preventDefault();
   clearSearch();
+});
+
+genreBar.addEventListener("click", function(event){
+  if(event.target.classList.contains("genre-btn")){
+    const genre = event.target.textContent;
+    browseGenre(genre);
+  }
 });
 
 // * SAVED MANGA LIST (Save & Remove Functions)
@@ -288,6 +296,47 @@ async function showDetails(id) {
     console.log("Error loading details:", error);
   }
 }
+
+
+// * BROWSE BY GENRE
+async function browseGenre(genre){
+  const genre_variables = {genre: genre};
+
+  const genre_query = `
+ query ($genre: String){
+    Page(perPage: 10){
+      media(genre: $genre, type: MANGA, sort: POPULARITY_DESC){
+        id
+        title { romaji english }
+        coverImage { large }
+      }
+    }
+  }`
+    try{
+
+      const response = await fetch("https://graphql.anilist.co", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query: genre_query,
+          variables: genre_variables,
+        }),
+      });
+    
+      const data = await response.json();
+      const results = data.data.Page.media;
+
+      statusMessage.textContent = `${genre} Manga`
+      renderManga(results);
+  }
+  catch(error){
+    statusMessage.textContent = "Something went wrong. Please try again in a moment.";
+  }
+}
+
 
 // * RENDERING SECTION
 function renderManga(results) {

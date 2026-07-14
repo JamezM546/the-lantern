@@ -175,7 +175,7 @@ body {
 
 
 #save-btn{
-  position:block;
+  display: block;
   margin-top: 16px;
   padding: 12px 20px;
   font-size: 15px;
@@ -197,4 +197,29 @@ body {
 
 #save-btn:hover:not(:disabled){
   background: var(--btn-hover)
+}
+
+#genre-bar{
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  flex-wrap: wrap;
+}
+
+.genre-btn{
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  border: none;
+  background:  var(--card-bg);
+  color: var(--main-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.genre-btn:hover{
+  background: var(--accent);
+  color: var(--card-bg);
 }
