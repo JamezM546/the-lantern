@@ -173,8 +173,11 @@ body {
   background: var(--btn-hover);
 }
 
+.no-scroll {
+  overflow: hidden;
+}
 
-#save-btn{
+#save-btn {
   display: block;
   margin-top: 16px;
   padding: 12px 20px;
@@ -187,19 +190,17 @@ body {
   transition: background 0.2s ease;
 }
 
-
-#save-btn:disabled{
+#save-btn:disabled {
   background: var(--text-muted);
   cursor: default;
   opacity: 0.7;
 }
 
-
-#save-btn:hover:not(:disabled){
-  background: var(--btn-hover)
+#save-btn:hover:not(:disabled) {
+  background: var(--btn-hover);
 }
 
-#genre-bar{
+#genre-bar {
   display: flex;
   justify-content: center;
   gap: 8px;
@@ -207,19 +208,19 @@ body {
   flex-wrap: wrap;
 }
 
-.genre-btn{
+.genre-btn {
   padding: 8px 16px;
   font-size: 14px;
   border: none;
   border-radius: 20px;
   border: none;
-  background:  var(--card-bg);
+  background: var(--card-bg);
   color: var(--main-text);
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
-.genre-btn:hover{
+.genre-btn:hover {
   background: var(--accent);
   color: var(--card-bg);
 }

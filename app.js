@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 closeModal.addEventListener("click", function () {
   modalBackground.classList.add("hidden"); //hide it again
+  document.body.classList.remove("no-scroll");
 });
 
 mylistLink.addEventListener("click", function (event) {
   event.preventDefault();
   statusMessage.textContent = "My List";
   checkMyList();
-  
 });
 
 manga_container.addEventListener("click", function (event) {
@@ -49,6 +49,7 @@ manga_container.addEventListener("click", function (event) {
 modalBackground.addEventListener("click", function (event) {
   if (event.target === modalBackground) {
     modalBackground.classList.add("hidden");
+    document.body.classList.remove("no-scroll");
   }
 });
 
@@ -57,8 +58,8 @@ homeLink.addEventListener("click", function (event) {
   clearSearch();
 });
 
-genreBar.addEventListener("click", function(event){
-  if(event.target.classList.contains("genre-btn")){
+genreBar.addEventListener("click", function (event) {
+  if (event.target.classList.contains("genre-btn")) {
     const genre = event.target.textContent;
     browseGenre(genre);
   }
@@ -67,6 +68,10 @@ genreBar.addEventListener("click", function(event){
 // * SAVED MANGA LIST (Save & Remove Functions)
 //Load saved list on startup (or empty array if nothing saved yet)
 let savedManga = JSON.parse(localStorage.getItem("lantern_list")) || [];
+
+//Limit Requests
+let isLoadingList = false;
+let isLoadingDetails = false;
 
 function saveToList(manga) {
   const alreadySaved = savedManga.some(function (item) {
@@ -98,7 +103,7 @@ function clearSearch() {
   loadTrending();
 }
 
-function checkMyList(){
+function checkMyList() {
   if (savedManga.length === 0) {
     manga_container.innerHTML =
       "<p>Your list is empty - save some manga to see them here!</p>";
@@ -109,6 +114,9 @@ function checkMyList(){
 
 // * TRENDING SECTION
 async function loadTrending() {
+  if (isLoadingList) return;
+  isLoadingList = true;
+
   const trend_query = `
     query {
         Page(perPage: 10) {
@@ -141,12 +149,24 @@ async function loadTrending() {
     renderManga(results);
   } catch (error) {
     statusMessage.textContent = "Something went wrong. Please try again.";
+  } finally {
+    isLoadingList = false;
   }
 }
 
 // * SEARCHING SECTION
 async function searchAction() {
   const userText = searchInput.value.trim();
+
+  if (userText === "") {
+    statusMessage.textContent = "Please enter something to search.";
+    manga_container.innerHTML = "";
+    return;
+  }
+
+  if (isLoadingList) return;
+  isLoadingList = true;
+  statusMessage.textContent = "Loading...";
 
   //The object 'variables' that GraphQL looks for. search: as the key, and userText as the value.
   const search_variables = { search: userText };
@@ -168,43 +188,42 @@ async function searchAction() {
             }
         }`;
 
-  if (userText === "") {
-    statusMessage.textContent = "Please enter something to search.";
-    manga_container.innerHTML = "";
-    return;
-  } else {
-    try {
-      //Getting API Data
-      //Send the query to AniList as a POST (query + variables go in the body)
-      const response = await fetch("https://graphql.anilist.co", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          query: search_query,
-          variables: search_variables,
-        }),
-      });
-      //Convert the raw response into a usable object
-      const data = await response.json();
-      //Dig into the response to reach the manga array
-      const results = data.data.Page.media;
+  try {
+    //Getting API Data
+    //Send the query to AniList as a POST (query + variables go in the body)
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: search_query,
+        variables: search_variables,
+      }),
+    });
+    //Convert the raw response into a usable object
+    const data = await response.json();
+    //Dig into the response to reach the manga array
+    const results = data.data.Page.media;
 
-      //Display Results Message
-      statusMessage.textContent = `Results for "${userText}" (${results.length} found)`;
+    //Display Results Message
+    statusMessage.textContent = `Results for "${userText}" (${results.length} found)`;
 
-      renderManga(results);
-    } catch (error) {
-      statusMessage.textContent =
-        "Something went wrong. Please try again in a moment.";
-    }
+    renderManga(results);
+  } catch (error) {
+    statusMessage.textContent =
+      "Something went wrong. Please try again in a moment.";
+  } finally {
+    isLoadingList = false;
   }
 }
 
 // * MANGA CARD DETAILS SECTION
 async function showDetails(id) {
+  if (isLoadingDetails) return;
+  isLoadingDetails = true;
+
   const detail_variables = { id: id };
 
   const details_query = `
@@ -292,15 +311,21 @@ async function showDetails(id) {
     });
 
     modalBackground.classList.remove("hidden"); //show the modal
+    document.body.classList.add("no-scroll");
   } catch (error) {
     console.log("Error loading details:", error);
+  } finally {
+    isLoadingDetails = false;
   }
 }
 
-
 // * BROWSE BY GENRE
-async function browseGenre(genre){
-  const genre_variables = {genre: genre};
+async function browseGenre(genre) {
+  if (isLoadingList) return;
+  isLoadingList = true;
+  statusMessage.textContent = "Loading...";
+
+  const genre_variables = { genre: genre };
 
   const genre_query = `
  query ($genre: String){
@@ -311,32 +336,38 @@ async function browseGenre(genre){
         coverImage { large }
       }
     }
-  }`
-    try{
+  }`;
+  try {
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: genre_query,
+        variables: genre_variables,
+      }),
+    });
 
-      const response = await fetch("https://graphql.anilist.co", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          query: genre_query,
-          variables: genre_variables,
-        }),
-      });
-    
-      const data = await response.json();
-      const results = data.data.Page.media;
+    const data = await response.json();
+    const results = data.data.Page.media;
 
-      statusMessage.textContent = `${genre} Manga`
-      renderManga(results);
-  }
-  catch(error){
-    statusMessage.textContent = "Something went wrong. Please try again in a moment.";
+    if (!results || results.length === 0) {
+      statusMessage.textContent = `No ${genre} manga found.`;
+      manga_container.innerHTML = "";
+      return;
+    }
+
+    statusMessage.textContent = `${genre} Manga`;
+    renderManga(results);
+  } catch (error) {
+    statusMessage.textContent =
+      "Something went wrong. Please try again in a moment.";
+  } finally {
+    isLoadingList = false;
   }
 }
-
 
 // * RENDERING SECTION
 function renderManga(results) {
