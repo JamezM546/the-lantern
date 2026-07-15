@@ -73,6 +73,9 @@ let savedManga = JSON.parse(localStorage.getItem("lantern_list")) || [];
 let isLoadingList = false;
 let isLoadingDetails = false;
 
+//Remeber genre results so repeat clicks don't refresh - caching
+const genreCache = {};
+
 function saveToList(manga) {
   const alreadySaved = savedManga.some(function (item) {
     return item.id === manga.id;
@@ -321,6 +324,13 @@ async function showDetails(id) {
 
 // * BROWSE BY GENRE
 async function browseGenre(genre) {
+  //Already loaded this genre? Use the saved copy.
+  if(genreCache[genre]) {
+    statusMessage.textContent = `${genre} Manga`;
+    renderManga(genreCache[genre]);
+    return;
+  }
+
   if (isLoadingList) return;
   isLoadingList = true;
   statusMessage.textContent = "Loading...";
@@ -358,7 +368,7 @@ async function browseGenre(genre) {
       manga_container.innerHTML = "";
       return;
     }
-
+    genreCache[genre] = results; //save for next time - cache
     statusMessage.textContent = `${genre} Manga`;
     renderManga(results);
   } catch (error) {
