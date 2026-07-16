@@ -9,6 +9,8 @@ const closeModal = document.querySelector("#close-modal");
 const mylistLink = document.querySelector("#mylist-link");
 const homeLink = document.querySelector("#home-link");
 const genreBar = document.querySelector("#genre-bar");
+const greetingTOD = document.querySelector("#greeting");
+const toast = document.querySelector("#toast");
 
 // * EVENT LISTENERS
 //Run search or clear on button click
@@ -298,6 +300,7 @@ async function showDetails(id) {
       if (isSaved) {
         removeFromList(manga.id);
         saveBtn.textContent = "Save to My List";
+        showToast("Removed from your list!");
 
         if (statusMessage.textContent === "My List") {
           checkMyList();
@@ -310,6 +313,7 @@ async function showDetails(id) {
         };
         saveToList(savedItem);
         saveBtn.textContent = "Remove from My List";
+        showToast("Saved to your list!");
       }
     });
 
@@ -391,4 +395,27 @@ function renderManga(results) {
                         </div>`;
   }
   manga_container.innerHTML = html;
+}
+
+
+// * GREETING SECTION
+const hour = new Date().getHours();
+let greeting;
+if(hour < 12) greeting = "Good morning! What are you reading today?";
+else if(hour < 18) greeting = "Good afternoon! Find your next read!";
+else if(hour > 23) greeting = "Good Evening, what are you reading tonight?";
+else greeting = "Still up? Let's find something good?";
+greetingTOD.textContent = greeting;
+
+// * TOAST SECTION
+let toastTimer;
+
+function showToast(message){
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () {
+    toast.classList.add("hidden");
+  }, 3000);
 }
