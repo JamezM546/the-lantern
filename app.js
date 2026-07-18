@@ -36,6 +36,7 @@ closeModal.addEventListener("click", function () {
 
 mylistLink.addEventListener("click", function (event) {
   event.preventDefault();
+  setActiveNav(mylistLink);
   statusMessage.textContent = "My List";
   checkMyList();
 });
@@ -57,6 +58,7 @@ modalBackground.addEventListener("click", function (event) {
 
 homeLink.addEventListener("click", function (event) {
   event.preventDefault();
+  setActiveNav(homeLink);
   clearSearch();
 });
 
@@ -126,6 +128,11 @@ function renderSkeletons(count){
               </div>`;
   }
   manga_container.innerHTML = html;
+}
+
+function setActiveNav(link){
+  document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+  link.classList.add("active");
 }
 
 
@@ -417,7 +424,7 @@ const hour = new Date().getHours();
 let greeting;
 if(hour < 12) greeting = "Good morning! What are you reading today?";
 else if(hour < 18) greeting = "Good afternoon! Find your next read!";
-else if(hour > 23) greeting = "Good Evening, what are you reading tonight?";
+else if(hour < 23) greeting = "Good Evening, what are you reading tonight?";
 else greeting = "Still up? Let's find something good!";
 greetingTOD.textContent = greeting;
 
