@@ -1,4 +1,18 @@
+import { useEffect, useState } from 'react'
+import { fetchTrending, type Manga } from './api/anilist'
+
+
 function App() {
+  const [mangaList, setMangaList] = useState<Manga[]>([])
+
+  useEffect(() => {
+    async function load() {
+      const results = await fetchTrending();
+      setMangaList(results);
+    }
+    load()
+  }, [])
+  
   return (
     <>
       <nav className="navbar">
@@ -20,7 +34,17 @@ function App() {
 
         <section className="results">
           <h2>Trending!</h2>
-          <div id="manga-list"></div>
+          <div id="manga-list">
+            {mangaList.map((manga) => {
+              const title = manga.title.english || manga.title.romaji
+              return (
+                <div className="manga-card" key={manga.id}>
+                  <h3>{title}</h3>
+                  <img src={manga.coverImage.large} alt={title}/>
+                  </div>
+              )
+            })}
+          </div>
         </section>
       </main>
     </>
