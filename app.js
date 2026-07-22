@@ -67,6 +67,7 @@ genreBar.addEventListener("click", function (event) {
   }
 });
 
+
 // * SAVED MANGA LIST (Save & Remove Functions)
 //Load saved list on startup (or empty array if nothing saved yet)
 let savedManga = JSON.parse(localStorage.getItem("lantern_list")) || [];
