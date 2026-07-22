@@ -94,6 +94,12 @@ body {
   color: var(--accent);
 }
 
+.nav-link.active{
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+}
+
 #manga-list {
   display: flex;
   justify-content: center;
@@ -279,4 +285,22 @@ body {
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@media (max-width: 600px){
+  .manga-card{
+    width: 45%;
+  }
+
+  .hero h1{
+    font-size: 48px;
+  }
+
+  #search-input{
+    width: 100%;
+  }
+
+  .search-bar{
+    flex-wrap: wrap;
+  }
 }
