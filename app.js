@@ -1,3 +1,6 @@
+import { getDisplayTitle } from "./title.js";
+
+
 const searchBtn = document.querySelector("#search-btn");
 const clearBtn = document.querySelector("#clear-btn");
 const searchInput = document.querySelector("#search-input");
@@ -283,7 +286,8 @@ async function showDetails(id) {
 
     //Dig deeper into the manga object to get what we want
     const manga = data.data.Media;
-    const title = manga.title.english || manga.title.romaji;
+    //const title = manga.title.english || manga.title.romaji;
+    const title = getDisplayTitle(manga.title)
 
     //Conversion table to have status messages (easier to understand)
     const statusText = {
@@ -410,7 +414,8 @@ function renderManga(results) {
   let html = "";
   for (let i = 0; i < results.length; i++) {
     //Prefer the English title, fall back to romaji if there's none
-    const title = results[i].title.english || results[i].title.romaji;
+    //const title = results[i].title.english || results[i].title.romaji;
+    const title = getDisplayTitle(results[i].title);
     html += `<div class="manga-card" data-id="${results[i].id}">
                             <h3>${title}</h3>
                             <img src ="${results[i].coverImage.large}" alt="${title}">

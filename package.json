@@ -1,0 +1,24 @@
+{
+  "name": "the-lantern",
+  "version": "1.0.0",
+  "description": "A cozy corner for manga discovery. The Lantern is a manga tracker and discovery web app where you can search for titles, save the ones you're interested in, and track what you're reading — all wrapped in a warm dark-violet aesthetic.",
+  "main": "app.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamezM546/the-lantern.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/JamezM546/the-lantern/issues"
+  },
+  "homepage": "https://github.com/JamezM546/the-lantern#readme",
+  "devDependencies": {
+    "vitest": "^4.1.10"
+  }
+}
