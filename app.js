@@ -287,21 +287,8 @@ async function showDetails(id) {
 
     //Dig deeper into the manga object to get what we want
     const manga = data.data.Media;
-    //const title = manga.title.english || manga.title.romaji;
     const title = getDisplayTitle(manga.title)
-
-    //Conversion table to have status messages (easier to understand) - uses function call now
     const niceStatus = formatStatus(manga.status);
-    // const statusText = {
-    //   RELEASING: "Ongoing",
-    //   FINISHED: "Completed",
-    //   NOT_YET_RELEASED: "Not yet released",
-    //   CANCELLED: "Cancelled",
-    //   HIATUS: "On hiatus",
-    // };
-
-    // const niceStatus = statusText[manga.status] || manga.status;
-
 
     modalBody.innerHTML = `
         <h2>${title}</h2>
@@ -416,8 +403,6 @@ async function browseGenre(genre) {
 function renderManga(results) {
   let html = "";
   for (let i = 0; i < results.length; i++) {
-    //Prefer the English title, fall back to romaji if there's none
-    //const title = results[i].title.english || results[i].title.romaji;
     const title = getDisplayTitle(results[i].title);
     html += `<div class="manga-card" data-id="${results[i].id}">
                             <h3>${title}</h3>

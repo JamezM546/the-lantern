@@ -28,6 +28,7 @@ Both use the [AniList API](https://anilist.co/) (GraphQL) for manga data.
 - **HTML** — page structure
 - **CSS** — styling and layout (flexbox, custom properties)
 - **JavaScript** — dynamic rendering and app logic
+- **Vitest** — unit tests for small helpers (repo root)
 - **AniList API** — manga data
 
 ### React rebuild (`the-lantern-react/`)
@@ -44,7 +45,14 @@ Both use the [AniList API](https://anilist.co/) (GraphQL) for manga data.
    ```
 2. Open `index.html` in your browser (or use Live Server).
 
-No build step required.
+No build step required to use the app. To run the vanilla unit tests from this same folder:
+
+```bash
+npm install
+npm test
+```
+
+See `TESTING.md` for the manual checklist and what those tests cover.
 
 ### React app
 1. Go into the React folder:

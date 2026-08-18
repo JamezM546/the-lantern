@@ -1,4 +1,6 @@
-# The Lantern — Manual Test Checklist
+# The Lantern — Test Checklist
+
+## Manual
 
 Open `index.html` (or Live Server), then check each item.
 
@@ -22,3 +24,21 @@ Open `index.html` (or Live Server), then check each item.
 - [x] Page loads and trending cards appear
 - [x] Modal opens on card click and closes with X / background
 - [x] Home brings you to trending upon first load / manual click
+
+## Automated (unit tests)
+
+From the **repo root** (the folder with `app.js`, not `the-lantern-react/`):
+
+```bash
+npm install
+npm test
+```
+
+`npm install` is only needed once (or after pulling dependency changes). There is still no build step to *run* the vanilla app in the browser.
+
+These tests cover two helpers in `helpers/`:
+
+- **Display title** — English if present, otherwise romaji
+- **Status** — known AniList codes become friendly labels (e.g. `RELEASING` → `Ongoing`); unknown codes echo back
+
+Search, genres, My List, and smoke checks above stay manual.
