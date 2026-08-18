@@ -1,5 +1,6 @@
 import { getDisplayTitle } from "./helpers/title.js";
 import { formatStatus } from "./helpers/status.js";
+import { getGreeting } from "./helpers/greeting.js";
 
 
 const searchBtn = document.querySelector("#search-btn");
@@ -415,11 +416,7 @@ function renderManga(results) {
 
 // * GREETING SECTION
 const hour = new Date().getHours();
-let greeting;
-if(hour < 12) greeting = "Good morning! What are you reading today?";
-else if(hour < 18) greeting = "Good afternoon! Find your next read!";
-else if(hour < 23) greeting = "Good Evening, what are you reading tonight?";
-else greeting = "Still up? Let's find something good!";
+const greeting = getGreeting(hour);
 greetingTOD.textContent = greeting;
 
 // * TOAST SECTION
