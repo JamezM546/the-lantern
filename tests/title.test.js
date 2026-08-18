@@ -1,5 +1,5 @@
 import {expect, it} from "vitest";
-import { getDisplayTitle } from "./title.js";
+import { getDisplayTitle } from "../helpers/title.js";
 
 it("retrieve an actual official manga title", () => {
     expect(getDisplayTitle({english: "Naruto", romaji: "NARUTO"})).toBe("Naruto")

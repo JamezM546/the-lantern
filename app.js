@@ -1,4 +1,5 @@
-import { getDisplayTitle } from "./title.js";
+import { getDisplayTitle } from "./helpers/title.js";
+import { formatStatus } from "./helpers/status.js";
 
 
 const searchBtn = document.querySelector("#search-btn");
@@ -289,16 +290,18 @@ async function showDetails(id) {
     //const title = manga.title.english || manga.title.romaji;
     const title = getDisplayTitle(manga.title)
 
-    //Conversion table to have status messages (easier to understand)
-    const statusText = {
-      RELEASING: "Ongoing",
-      FINISHED: "Completed",
-      NOT_YET_RELEASED: "Not yet released",
-      CANCELLED: "Cancelled",
-      HIATUS: "On hiatus",
-    };
+    //Conversion table to have status messages (easier to understand) - uses function call now
+    const niceStatus = formatStatus(manga.status);
+    // const statusText = {
+    //   RELEASING: "Ongoing",
+    //   FINISHED: "Completed",
+    //   NOT_YET_RELEASED: "Not yet released",
+    //   CANCELLED: "Cancelled",
+    //   HIATUS: "On hiatus",
+    // };
 
-    const niceStatus = statusText[manga.status] || manga.status;
+    // const niceStatus = statusText[manga.status] || manga.status;
+
 
     modalBody.innerHTML = `
         <h2>${title}</h2>
