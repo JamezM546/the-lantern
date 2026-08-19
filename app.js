@@ -1,6 +1,7 @@
 import { getDisplayTitle } from "./helpers/title.js";
 import { formatStatus } from "./helpers/status.js";
 import { getGreeting } from "./helpers/greeting.js";
+import { addToList } from "./helpers/list.js";
 
 
 const searchBtn = document.querySelector("#search-btn");
@@ -87,16 +88,7 @@ let isLoadingDetails = false;
 const genreCache = {};
 
 function saveToList(manga) {
-  const alreadySaved = savedManga.some(function (item) {
-    return item.id === manga.id;
-  });
-
-  if (alreadySaved) {
-    return;
-  }
-
-  savedManga.push(manga);
-  localStorage.setItem("lantern_list", JSON.stringify(savedManga));
+  addToList(savedManga, manga, localStorage);
 
   if (statusMessage.textContent === "My List") {
     renderManga(savedManga);

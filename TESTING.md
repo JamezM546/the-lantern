@@ -25,7 +25,7 @@ Open `index.html` (or Live Server), then check each item.
 - [x] Modal opens on card click and closes with X / background
 - [x] Home brings you to trending upon first load / manual click
 
-## Automated (unit tests)
+## Automated (unit + integration)
 
 From the **repo root** (the folder with `app.js`, not `the-lantern-react/`):
 
@@ -36,9 +36,14 @@ npm test
 
 `npm install` is only needed once (or after pulling dependency changes). There is still no build step to *run* the vanilla app in the browser.
 
-These tests cover two helpers in `helpers/`:
+### Unit tests (`helpers/`)
 
 - **Display title** — English if present, otherwise romaji
 - **Status** — known AniList codes become friendly labels (e.g. `RELEASING` → `Ongoing`); unknown codes echo back
+- **Greeting** — time-of-day message from an hour (0–23)
+
+### Integration test (`helpers/list.js`)
+
+- **Save to My List** — adding a manga updates the in-memory list and writes JSON to storage; saving the same id twice does not duplicate (test uses a fake `setItem` / `getItem` instead of the browser’s `localStorage`)
 
 Search, genres, My List, and smoke checks above stay manual.
