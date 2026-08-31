@@ -1,15 +1,15 @@
 # The Lantern
 
-A cozy corner for manga discovery. The Lantern is a manga tracker and discovery web app where you can search for titles, save the ones you're interested in, and track what you're reading — all wrapped in a warm dark-violet aesthetic.
+A cozy corner for manga discovery. The Lantern is a manga tracker and discovery web app where you can search for titles, save the ones you're interested in, and track what you're reading, all wrapped in a warm dark violet aesthetic.
 
-This project is built as a hands-on learning vehicle. It started in **vanilla HTML, CSS, and JavaScript**, and is also being rebuilt in **React + TypeScript** to practice modern front-end tools.
+This project is built as a hands-on learning vehicle. It started in **vanilla HTML, CSS, and JavaScript**, and is also rebuilt in **React + TypeScript** to practice modern front-end tools.
 
 ## Two versions
 
 | Version | Folder | Status |
 |---|---|---|
-| **Vanilla JS** | repo root (`index.html`, `app.js`, `styles.css`) | Main working app |
-| **React + TypeScript** | `the-lantern-react/` | In progress (UI shell + AniList trending fetch) |
+| **Vanilla JS** | repo root (`index.html`, `app.js`, `styles.css`) | Full featured app |
+| **React + TypeScript** | `the-lantern-react/` | Core features complete |
 
 Both use the [AniList API](https://anilist.co/) (GraphQL) for manga data.
 
@@ -18,23 +18,32 @@ Both use the [AniList API](https://anilist.co/) (GraphQL) for manga data.
 - **Search** manga by title
 - **Browse** by genre
 - **Save** titles to a personal list (`localStorage`)
-- **Track** your reading progress *(planned)*
+- **Track** your reading progress *(future)*
 
-*(Some features are still in progress.)*
+## Features (React)
+
+- **Trending** manga on load
+- **Search** by title with clear and empty input feedback
+- **Browse** by genre
+- **Detail modal** with score, chapters, genres, and status
+- **Save and remove** titles to My List (`localStorage`, same key as vanilla)
+- **My List** view with empty state
+
+Toasts, skeleton loaders, and reading progress are vanilla only for now.
 
 ## Tech Stack
 
 ### Vanilla
-- **HTML** — page structure
-- **CSS** — styling and layout (flexbox, custom properties)
-- **JavaScript** — dynamic rendering and app logic
-- **Vitest** — unit tests for small helpers (repo root)
-- **AniList API** — manga data
+- **HTML** for page structure
+- **CSS** for styling and layout (flexbox, custom properties)
+- **JavaScript** for dynamic rendering and app logic
+- **Vitest** for unit tests for small helpers (repo root)
+- **AniList API** for manga data
 
 ### React rebuild (`the-lantern-react/`)
 - **React** + **TypeScript**
-- **Vite** — local dev server and build tool
-- **AniList API** — same data source
+- **Vite** for local dev server and build tool
+- **AniList API** for the same data source
 
 ## Getting Started
 
@@ -66,6 +75,12 @@ See `TESTING.md` for the manual checklist and what those tests cover.
    ```
 3. Open the local URL Vite prints (usually `http://localhost:5173`).
 
+To build for production:
+
+```bash
+npm run build
+```
+
 ## Roadmap
 
 ### Vanilla
@@ -73,15 +88,22 @@ See `TESTING.md` for the manual checklist and what those tests cover.
 - [x] Card styling and layout
 - [x] Live search via the AniList API
 - [x] Save titles to a personal list
-- [ ] Reading progress tracking
+
 
 ### React rebuild
 - [x] Project setup (Vite + React + TypeScript)
 - [x] Lantern layout and styles
-- [x] AniList `fetchTrending` helper
-- [ ] Show trending cards in the UI
-- [ ] Search, genres, My List
+- [x] AniList API helpers (trending, search, details)
+- [x] Trending and search in the UI
+- [x] Detail modal with save and remove
+- [x] My List view
+- [x] Genre browse
+
+
+## Future ideas
+- Reading progress on saved manga (vanilla)
+- Toasts in the React app
 
 ## About
 
-The Lantern grew out of a genuine desire for a simple, pleasant way to keep track of manga — built as much for learning as for use.
+The Lantern grew out of a genuine desire for a simple, pleasant way to keep track of manga, built as much for learning as for use.

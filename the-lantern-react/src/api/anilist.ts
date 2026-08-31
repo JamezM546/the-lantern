@@ -9,7 +9,18 @@ export type Manga = {
     }
 }
 
-const TRENDING_QUERY = `
+//Extra fields we only need when the detail modal is open
+export type MangaDetails = Manga & {
+    description: string | null
+    averageScore: number | null
+    chapters: number | null
+    genres: string[]
+    status: string
+}
+
+
+// * TRENDING SECTION
+const trend_query = `
 query {
     Page(perPage: 10) {
         media(type: MANGA, sort: TRENDING_DESC) {
@@ -29,7 +40,7 @@ export async function fetchTrending(): Promise<Manga[]> {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          query: TRENDING_QUERY,
+          query: trend_query,
         }),
       });
 
@@ -38,8 +49,8 @@ export async function fetchTrending(): Promise<Manga[]> {
 }
 
 
-
-const SEARCH_QUERY = `
+// * SEARCHING SECTION
+const search_query = `
 query ($search: String) {
     Page(perPage: 10) {
         media(search: $search, type: MANGA, isAdult: false){
@@ -60,23 +71,87 @@ export async function fetchSearch(userText: string): Promise<Manga[]>{
    
     const search_variables = { search: userText };
 
-    //GraphQL query: where we ask AniList for the exact fields we want back
-        //Getting API Data
-        //Send the query to AniList as a POST (query + variables go in the body)
-        const response = await fetch("https://graphql.anilist.co", {
+    const response = await fetch("https://graphql.anilist.co", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
         },
         body: JSON.stringify({
-            query: SEARCH_QUERY,
+            query: search_query,
             variables: search_variables,
         }),
         });
-        //Convert the raw response into a usable object
         const data = await response.json();
-        //Dig into the response to reach the manga array
         return data.data.Page.media;
      
+}
+
+
+// * MANGA CARD DETAILS SECTION
+const details_query = `
+    query ($id: Int){
+        Media(id: $id, type: MANGA){
+            id
+            title { romaji english }
+            coverImage { large }
+            description
+            averageScore
+            chapters
+            genres
+            status
+            }
+        }`;
+
+
+export async function fetchDetails(id: number): Promise<MangaDetails>{
+
+    const detail_variables = { id: id };
+
+    const response = await fetch("https://graphql.anilist.co", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            query: details_query,
+            variables: detail_variables,
+        }),
+        });
+        const data = await response.json();
+        return data.data.Media;
+}
+
+
+// * BROWSE BY GENRE
+const genre_query = `
+ query ($genre: String){
+    Page(perPage: 10){
+      media(genre: $genre, type: MANGA, sort: POPULARITY_DESC){
+        id
+        title { romaji english }
+        coverImage { large }
+      }
+    }
+  }`;
+
+
+export async function fetchGenre(genre: string): Promise<Manga[]>{
+
+    const genre_variables = { genre: genre };
+
+    const response = await fetch("https://graphql.anilist.co", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            query: genre_query,
+            variables: genre_variables,
+        }),
+        });
+        const data = await response.json();
+        return data.data.Page.media;
 }

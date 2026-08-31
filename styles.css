@@ -77,8 +77,9 @@ body {
 
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 64px;
   padding: 16px 32px;
   background-color: var(--card-bg);
 }
@@ -87,7 +88,6 @@ body {
   color: var(--main-text);
   text-decoration: none;
   font-weight: 600;
-  margin-left: 24px;
 }
 
 .navbar a:hover {
