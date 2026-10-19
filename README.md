@@ -104,6 +104,7 @@ npm run build
 - Reading progress on saved manga (vanilla)
 - Toasts in the React app
 
+
 ## About
 
 The Lantern grew out of a genuine desire for a simple, pleasant way to keep track of manga, built as much for learning as for use.
